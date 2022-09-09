@@ -12,7 +12,7 @@ function Header(props) {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarsFurni">
                         <ul className="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                            <li><NavLink className="nav-link scrollto active" to={"/home"}>Home</NavLink></li>
+                            <li><NavLink className="nav-link scrollto active" to={"/"}>Home</NavLink></li>
                             <li><NavLink className="nav-link scrollto" to={'/shop'}>Shop</NavLink></li>
                             <li><NavLink className="nav-link scrollto" to={'/about'}>About us</NavLink></li>
                             <li><NavLink className="nav-link scrollto" to={'/services'}>Services</NavLink></li>
