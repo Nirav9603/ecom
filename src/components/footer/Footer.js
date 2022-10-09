@@ -1,6 +1,28 @@
 import React from 'react';
+import * as yup from 'yup';
+import { Form, Formik, useFormik } from 'formik';
+import { NavLink } from 'react-router-dom';
 
 function Footer(props) {
+
+    let schema = yup.object().shape({
+        name: yup.string().required("Please Enter Name."),
+        email: yup.string().email("Please Enter Email.").required("Please Enter Valid Name.")
+    });
+
+    const formikObj = useFormik({
+        initialValues: {
+            name: '',
+            email: ''
+        },
+        validationSchema: schema,
+        onSubmit: values => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
+
+    const { handleSubmit, handleBlur, handleChange, errors, touched } = formikObj;
+
     return (
         <div>
             <footer className="footer-section">
@@ -12,19 +34,23 @@ function Footer(props) {
                         <div className="col-lg-8">
                             <div className="subscription-form">
                                 <h3 className="d-flex align-items-center"><span className="me-1"><img src="assets/images/envelope-outline.svg" alt="Image" className="img-fluid" /></span><span>Subscribe to Newsletter</span></h3>
-                                <form action="#" className="row g-3">
-                                    <div className="col-auto">
-                                        <input type="text" className="form-control" placeholder="Enter your name" />
-                                    </div>
-                                    <div className="col-auto">
-                                        <input type="email" className="form-control" placeholder="Enter your email" />
-                                    </div>
-                                    <div className="col-auto">
-                                        <button className="btn btn-primary">
-                                            <span className="fa fa-paper-plane" />
-                                        </button>
-                                    </div>
-                                </form>
+                                <Formik values={formikObj}>
+                                    <Form onSubmit={handleSubmit} className="row g-3">
+                                        <div className="col-auto">
+                                            <input onChange={handleChange} onBlur={handleBlur} type="text" className="form-control" placeholder="Enter your name" />
+                                            <p>{errors.name && touched.name ? errors.name : ""}</p>
+                                        </div>
+                                        <div className="col-auto">
+                                            <input onChange={handleChange} onBlur={handleBlur} type="email" className="form-control" placeholder="Enter your email" />
+                                            <p>{errors.email && touched.email ? errors.email : ""}</p>
+                                        </div>
+                                        <div className="col-auto">
+                                            <button type="submit" className="btn btn-primary">
+                                                <span className="fa fa-paper-plane" />
+                                            </button>
+                                        </div>
+                                    </Form>
+                                </Formik>
                             </div>
                         </div>
                     </div>
@@ -43,10 +69,10 @@ function Footer(props) {
                             <div className="row links-wrap">
                                 <div className="col-6 col-sm-6 col-md-3">
                                     <ul className="list-unstyled">
-                                        <li><a href="#">About us</a></li>
-                                        <li><a href="#">Services</a></li>
-                                        <li><a href="#">Blog</a></li>
-                                        <li><a href="#">Contact us</a></li>
+                                        <li><NavLink to={'/about'}>About us</NavLink></li>
+                                        <li><NavLink to={'/service'}>Services</NavLink></li>
+                                        <li><NavLink to={'/blog'}>Blog</NavLink></li>
+                                        <li><NavLink to={'/contact'}>Contact us</NavLink></li>
                                     </ul>
                                 </div>
                                 <div className="col-6 col-sm-6 col-md-3">

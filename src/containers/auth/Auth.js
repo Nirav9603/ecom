@@ -1,23 +1,38 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik';
 
-function Contact(props) {
+function Auth(props) {
+
+    const [userType, setUserType] = useState("Login");
+    const [resetPass, setResetPass] = useState(false);
+
+    const handleSignup = () => {
+        setUserType('Signup')
+        setResetPass(false)
+    }
+
+    const handleLogin = () => {
+        setUserType('Login')
+        setResetPass(false)
+    }
+
+    const handleResetPass = () => {
+        setResetPass(true)
+    }
 
     let schema = yup.object().shape({
-        fname: yup.string().required("Please Enter Your First Name."),
-        lname: yup.string().required("Plase Enter Your Last Name."),
+        name: yup.string().required("Please Enter Your Name."),
         email: yup.string().email("Please Enter Valid Email.").required("Plase Enter Your Email."),
-        message: yup.string().required("Plase Enter Your Any Message.")
+        password: yup.string().required("Plase Enter Your Password.")
     });
 
     const formikObj = useFormik({
         initialValues: {
-            fname: '',
-            lname: '',
+            name: '',
             email: '',
-            message: ''
+            password: ''
         },
         validationSchema: schema,
         onSubmit: values => {
@@ -25,7 +40,7 @@ function Contact(props) {
         },
     });
 
-    const {handleChange, handleSubmit, errors, touched, handleBlur} = formikObj;
+    const { handleChange, handleSubmit, errors, touched, handleBlur } = formikObj;
 
     return (
         <div>
@@ -34,14 +49,13 @@ function Contact(props) {
                     <div className="row justify-content-between">
                         <div className="col-lg-5">
                             <div className="intro-excerpt">
-                                <h1>Contact</h1>
-                                <p className="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-                                <p><NavLink to={'/shop'} className="btn btn-secondary me-2">Shop Now</NavLink><a href="#" className="btn btn-white-outline">Explore</a></p>
-                            </div>
-                        </div>
-                        <div className="col-lg-7">
-                            <div className="hero-img-wrap">
-                                <img src="assets/images/couch.png" className="img-fluid" />
+                                <h1>
+                                    {resetPass ? "Forgot Password" :
+
+                                        userType === 'Login' ? "Login" : "Signup"
+
+                                    }
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -92,43 +106,79 @@ function Contact(props) {
                                 </div>
                                 <Formik values={formikObj}>
                                     <Form onSubmit={handleSubmit}>
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <div className="form-group">
-                                                    <label className="text-black" htmlFor="fname">First name</label>
-                                                    <input onChange={handleChange} onBlur={handleBlur} name='fname' type="text" className="form-control" id="fname" />
-                                                    <p style={{color: 'red'}}>{errors.fname && touched.fname ? errors.fname : ''}</p>
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
-                                                <div className="form-group">
-                                                    <label className="text-black" htmlFor="lname">Last name</label>
-                                                    <input onChange={handleChange} onBlur={handleBlur} name='lname' type="text" className="form-control" id="lname" />
-                                                    <p style={{color: 'red'}}>{errors.lname && touched.lname ? errors.lname : ''}</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {
+                                            userType === 'Login'
+                                                ?
+                                                ''
+                                                :
+                                                resetPass ? " "
+                                                    :
+                                                    <div className="form-group">
+                                                        <label className="text-black" htmlFor="name">Name</label>
+                                                        <input onChange={handleChange} onBlur={handleBlur} name='name' type="text" className="form-control" id="name" />
+                                                        <p style={{ color: 'red' }}>{errors.name && touched.name ? errors.name : ''}</p>
+                                                    </div>
+                                        }
                                         <div className="form-group">
                                             <label className="text-black" htmlFor="email">Email address</label>
                                             <input onChange={handleChange} onBlur={handleBlur} name='email' type="email" className="form-control" id="email" />
-                                            <p style={{color: 'red'}}>{errors.email && touched.email ? errors.email : ''}</p>
+                                            <p style={{ color: 'red' }}>{errors.email && touched.email ? errors.email : ''}</p>
                                         </div>
-                                        <div className="form-group mb-5">
-                                            <label className="text-black" htmlFor="message">Message</label>
-                                            <textarea onChange={handleChange} onBlur={handleBlur} name='message' className="form-control" id="message" cols={30} rows={5} defaultValue={""} />
-                                            <p style={{color: 'red'}}>{errors.message && touched.message ? errors.message : ''}</p>
-                                        </div>
-                                        <button type="submit" className="btn btn-primary-hover-outline">Send Message</button>
+                                        {
+                                            resetPass ? " "
+                                                :
+                                                <div className="form-group">
+                                                    <label className="text-black" htmlFor="password">Password</label>
+                                                    <input onChange={handleChange} onBlur={handleBlur} name='password' type="text" className="form-control" id="password" />
+                                                    <p style={{ color: 'red' }}>{errors.password && touched.password ? errors.password : ''}</p>
+                                                </div>
+                                        }
+
+
+                                        {
+                                            userType === 'Login'
+                                                ? <>{
+                                                    resetPass ?
+                                                        <button type="submit" className="btn btn-primary-hover-outline">Forgot Password</button>
+                                                        :
+                                                        <button type="submit" className="btn btn-primary-hover-outline">Login</button>
+                                                }
+
+
+                                                </>
+                                                :
+                                                <button type="submit" className="btn btn-primary-hover-outline">Signup</button>
+                                        }
+
+
                                     </Form>
                                 </Formik>
+                                {
+                                    userType === 'Login'
+                                        ?
+                                        <>
+                                            <p>Create A New Account? <Link onClick={() => handleSignup()}>Signup</Link></p>
+
+
+                                            {
+                                                resetPass ? " " :
+
+                                                    <p><Link onClick={() => handleResetPass()}>Forgot Password?</Link></p>
+                                            }
+                                        </>
+
+                                        :
+                                        <p>Already Have An Account <Link onClick={() => handleLogin()}>Login</Link></p>
+                                }
+
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     );
 }
 
-export default Contact;
+export default Auth;
